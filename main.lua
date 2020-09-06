@@ -65,22 +65,55 @@ function love.update(dt) -- dt is delta time
   paddleOne:update(dt)
   paddleTwo:update(dt)
 
-  if love.keyboard.isDown('w') then
-    paddleOne.dy = -PADDLESPEED
-    if gameState == 'score' and servingPlayer == 1 then
-      ball:afterScore(dt)
-      ball.dy = -PADDLESPEED
-      ball.y = paddleOne.y + (paddleOne.height / 2 - 2)
+  if gameState == 'score' or gameState == 'play' then
+    if love.keyboard.isDown('w') then
+      paddleOne.dy = -PADDLESPEED
+      paddleOne.dx = 0
+      if gameState == 'score' and servingPlayer == 1 then
+        ball:afterScore(dt)
+        ball.dy = -PADDLESPEED
+        ball.y = paddleOne.y + (paddleOne.height / 2 - 2)
+        ball.dx = 0
+        ball.x = paddleOne.x + 4
+      end
+    elseif love.keyboard.isDown('s') then
+      paddleOne.dy = PADDLESPEED
+      paddleOne.dx = 0
+      if gameState == 'score' and servingPlayer == 1 then
+        ball:afterScore(dt)
+        ball.dy = paddleOne.dy
+        ball.y = paddleOne.y + (paddleOne.height / 2 - 2)
+        ball.dx = 0
+        ball.x = paddleOne.x + 4
+      end
+    elseif love.keyboard.isDown('a') then
+      paddleOne.dx = -PADDLESPEED
+      paddleOne.dy = 0
+      if gameState == 'score' and servingPlayer == 1 then
+        ball:afterScore(dt)
+        ball.dx = paddleOne.dx
+        ball.x = paddleOne.x + 4
+        ball.dy = 0
+        ball.y = paddleOne.y + 8
+      end
+    elseif love.keyboard.isDown('d') then
+      paddleOne.dx = PADDLESPEED
+      paddleOne.dy = 0
+      if gameState == 'score' and servingPlayer == 1 then
+        ball:afterScore(dt)
+        ball.dx = paddleOne.dx
+        ball.x = paddleOne.x + 4
+        ball.dy = 0
+        ball.y = paddleOne.y + 8
+      end
+    else
+      paddleOne.dy = 0
+      paddleOne.dx = 0
+      if gameState == 'score' then
+        ball.dx = 0
+        ball.dy = 0
+      end
     end
-  elseif love.keyboard.isDown('s') then
-    paddleOne.dy = PADDLESPEED
-    if gameState == 'score' and servingPlayer == 1 then
-      ball:afterScore(dt)
-      ball.dy = paddleOne.dy
-      ball.y = paddleOne.y + (paddleOne.height / 2 - 2)
-    end
-  else
-    paddleOne.dy = 0
   end
 
   if numOfPlayers == 1 then
@@ -148,31 +181,65 @@ function love.update(dt) -- dt is delta time
     end
   end
 
+
   if numOfPlayers == 2 then
-    if love.keyboard.isDown('up') then
-      paddleTwo.dy = -PADDLESPEED
-      if gameState == 'score' and servingPlayer == 2 then
-        ball:afterScore(dt)
-        ball.dy = -PADDLESPEED
-        ball.y = paddleTwo.y + (paddleTwo.height / 2 - 2)
-      end
-    elseif love.keyboard.isDown('down') then
-      paddleTwo.dy = PADDLESPEED
-      if gameState == 'score' and servingPlayer == 2 then
-        ball:afterScore(dt)
-        ball.dy = PADDLESPEED
-        ball.y = paddleTwo.y + (paddleTwo.height / 2 - 2)
-      end
-    else
-      paddleTwo.dy = 0
-      if gameState == 'score' and servingPlayer == 2 then
-        nextY = 0
-        ball.dy = 0
-        ball.y = paddleTwo.y + (paddleTwo.height / 2 - 2)
-      elseif gameState == 'score' and servingPlayer == 1 then
-        nextY = 0
-        ball.dy = 0
-        ball.y = paddleOne.y + (paddleOne.height /2 -2)
+    if gameState == 'play' or gameState == 'score' then
+      if love.keyboard.isDown('up') then
+        paddleTwo.dy = -PADDLESPEED
+        paddleTwo.dx = 0
+        if gameState == 'score' and servingPlayer == 2 then
+          ball:afterScore(dt)
+          ball.dy = -PADDLESPEED
+          ball.y = paddleTwo.y + (paddleTwo.height / 2 - 2)
+          ball.dx = 0
+          ball.x = paddleTwo.x - 4
+        end
+      elseif love.keyboard.isDown('down') then
+        paddleTwo.dy = PADDLESPEED
+        paddleTwo.dx = 0
+        if gameState == 'score' and servingPlayer == 2 then
+          ball:afterScore(dt)
+          ball.dy = PADDLESPEED
+          ball.y = paddleTwo.y + (paddleTwo.height / 2 - 2)
+          ball.dx = 0
+          ball.x = paddleTwo.x - 4
+        end
+      elseif love.keyboard.isDown('left') then
+        paddleTwo.dx = -PADDLESPEED
+        paddleTwo.dy = 0
+        if gameState == 'score' and servingPlayer == 2 then
+          ball:afterScore(dt)
+          ball.dx = -PADDLESPEED
+          ball.x = paddleTwo.x - 4
+          ball.dy = 0
+          ball.y = paddleTwo.y + 8
+        end
+      elseif love.keyboard.isDown('right') then
+        paddleTwo.dx = PADDLESPEED
+        paddleTwo.dy = 0
+        if gameState == 'score' and servingPlayer == 2 then
+          ball:afterScore(dt)
+          ball.dx = PADDLESPEED
+          ball.x = paddleTwo.x - 4
+          ball.dy = 0
+          ball.y = paddleTwo.y + 8
+        end
+      else
+        paddleTwo.dy = 0
+        paddleTwo.dx = 0
+        if gameState == 'score' and servingPlayer == 2 then
+          nextY = 0
+          ball.dy = 0
+          ball.y = paddleTwo.y + (paddleTwo.height / 2 - 2)
+          ball.dx = 0
+          ball.x = paddleTwo.x - 4
+        elseif gameState == 'score' and servingPlayer == 1 then
+          nextY = 0
+          ball.dy = 0
+          ball.y = paddleOne.y + (paddleOne.height /2 -2)
+          ball.dx = 0
+          ball.x = paddleOne.x + 4
+        end
       end
     end
   end

@@ -12,7 +12,7 @@ function Ball:init(x, y, width, height)
   elseif difficulty == 2 then
     self.dx = math.random(2) == 1 and -100 or 100
     self.dy = math.random(-50, 50)
-  else 
+  else
     self.dx = math.random(2) == 1 and -150 or 150
     self.dy = math.random(-65, 65)
   end
@@ -56,6 +56,18 @@ function Ball:afterScore(dt)
     self.y = math.max(8, self.y + self.dy * dt)
   elseif self.dy > 0 then
     self.y = math.min(VIRTUAL_HEIGHT - 12, self.y + self.dy * dt)
+  elseif self.dx <= 0 then
+    if self.x < VIRTUAL_WIDTH / 2 then
+      self.x = math.max(8, self.x + self.dx * dt)
+    elseif self.x > VIRTUAL_WIDTH / 2 then
+      self.x = math.max((VIRTUAL_WIDTH / 2) + 20, self.x + self.dx * dt)
+    end
+  elseif self.dx > 0 then
+    if self.x < VIRTUAL_WIDTH / 2 then
+      self.x = math.min((VIRTUAL_WIDTH / 2) - 24, self.x + self.dx * dt)
+    elseif self.x > VIRTUAL_WIDTH / 2 then
+      self.x = math.min(VIRTUAL_WIDTH - 12, self.x + self.dx * dt)
+    end
   end
 end
 
