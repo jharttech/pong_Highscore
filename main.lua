@@ -86,7 +86,7 @@ function love.update(dt) -- dt is delta time
         ball.dx = 0
         ball.x = paddleOne.x + 4
       end
-    elseif love.keyboard.isDown('a') then
+    elseif love.keyboard.isDown('a') and numOfPlayers ~= 1 then
       paddleOne.dx = -PADDLESPEED
       paddleOne.dy = 0
       if gameState == 'score' and servingPlayer == 1 then
@@ -96,7 +96,7 @@ function love.update(dt) -- dt is delta time
         ball.dy = 0
         ball.y = paddleOne.y + 8
       end
-    elseif love.keyboard.isDown('d') then
+    elseif love.keyboard.isDown('d') and numOfPlayers ~= 1 then
       paddleOne.dx = PADDLESPEED
       paddleOne.dy = 0
       if gameState == 'score' and servingPlayer == 1 then
@@ -111,7 +111,6 @@ function love.update(dt) -- dt is delta time
       paddleOne.dx = 0
       if gameState == 'score' then
         ball.dx = 0
-        ball.dy = 0
       end
     end
   end
@@ -177,6 +176,7 @@ function love.update(dt) -- dt is delta time
       paddleTwo.y = ((ball.y - paddleTwo.height / 2 - 2)  + nextY)
     elseif gameState == 'victory' then
       ball.dy = 0
+      ball.dx = 0
       paddleTwo.dy = 0
     end
   end
@@ -250,19 +250,19 @@ function love.update(dt) -- dt is delta time
     ball:update(dt*1.5)
 
     if ball.x <= 0 then
-	if difficulty == 3 then
-		gameState = 'victory'
-		sounds['win']:play()
-	else
-      		randomServe = math.random(0, VIRTUAL_HEIGHT - paddleTwo.height)
-      		playerTwoScore = playerTwoScore + 1
-      		ball:reset()
-      		ball.x = paddleTwo.x
-      		ball.y = paddleTwo.y + (paddleTwo.height / 2 - 2)
-      		gameState = 'score'
-      		servingPlayer = 2
-      		sounds['score']:play()
-	end
+	    if difficulty == 3 then
+		    gameState = 'victory'
+		    sounds['win']:play()
+	    else
+      	randomServe = math.random(paddleTwo.height / 2, VIRTUAL_HEIGHT - (paddleTwo.height / 2))
+      	playerTwoScore = playerTwoScore + 1
+      	ball:reset()
+      	ball.x = paddleTwo.x
+      	ball.y = paddleTwo.y + (paddleTwo.height / 2 - 2)
+      	gameState = 'score'
+      	servingPlayer = 2
+      	sounds['score']:play()
+	     end
     elseif ball.x >= VIRTUAL_WIDTH - 4 then
       if difficulty == 1 then
         nextY = math.random(-25, 25)
@@ -455,12 +455,11 @@ function love.draw()
 		love.graphics.printf("You survived " .. tostring(highScore) .. " Seconds !!!", 0, VIRTUAL_HEIGHT / 2 - 50, VIRTUAL_WIDTH, 'center')
 		love.graphics.setFont(winnerWinner)
 		love.graphics.printf("Computer", 0, VIRTUAL_HEIGHT / 2 - 25, VIRTUAL_WIDTH, 'center')
-    		love.graphics.printf("IS THE", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, 'center')
-    		love.graphics.setFont(winnerWinner)
+        love.graphics.setFont(winnerWinner)
+        love.graphics.printf("IS THE", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, 'center')
     		love.graphics.setFont(chickenDinner)
     		love.graphics.printf("WINNER!!!", 0, VIRTUAL_HEIGHT / 2 + 25, VIRTUAL_WIDTH, 'center')
 	  else
-    		love.graphics.printf("WINNER!!!", 0, VIRTUAL_HEIGHT / 2 + 25, VIRTUAL_WIDTH, 'center')
     		love.graphics.printf(playerWhoScored, 0, VIRTUAL_HEIGHT / 2 - 25, VIRTUAL_WIDTH, 'center')
     		love.graphics.printf("IS THE", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, 'center')
     		love.graphics.setFont(chickenDinner)
